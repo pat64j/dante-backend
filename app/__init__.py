@@ -19,6 +19,7 @@ def create_app(config_class=Config):
 
     from app.models.user import User
     from app.models.role import Role
+    from app.models.group import Group
 
     db.init_app(app)
     migrate.init_app(app,db)
@@ -26,7 +27,10 @@ def create_app(config_class=Config):
     login_manager.init_app(app)
 
 
-    from app.recipes.index.routes import index
-    app.register_blueprint(index)
+    from app.recipes.index import index as main_blueprint
+    app.register_blueprint(main_blueprint)
+
+    from app.recipes.api import api as api_blueprint
+    app.register_blueprint(api_blueprint, url_prefix='/api/v1')
 
     return app
