@@ -14,5 +14,4 @@ class GroupsApi(Resource):
         groups_schema = GroupSchema(many=True)
         result = groups_schema.dump(all_groups)
         return jsonify(result)
-        # return Response(jsonify(result), mimetype="application/json", status=200)
 

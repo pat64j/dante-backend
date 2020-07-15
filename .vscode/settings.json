@@ -1,8 +1,0 @@
-{
-    "python.pythonPath": "env/bin/python",
-    "python.linting.pylintArgs": [
-        "--load-plugins",
-        "pylint-flask",
-        "pyling-flask-sqlalchemy"
-    ]
-}

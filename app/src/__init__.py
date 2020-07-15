@@ -1,6 +1,6 @@
-from .groups import GroupsApi
-from flask_restful import Api
+from flask import Blueprint
 
 
-api = Api(prefix='/api/v1')
-api.add_resource(GroupsApi, '/groups')
+dante_api = Blueprint('dante_api', __name__)
+
+from . import routes

@@ -1,20 +1,14 @@
 from app import db, ma
 from marshmallow import fields
 from datetime import datetime
-from flask_login import UserMixin
 from flask import current_app
-from werkzeug.security import generate_password_hash, check_password_hash
+from flask_bcrypt import generate_password_hash, check_password_hash
+# from werkzeug.security import generate_password_hash, check_password_hash
 from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
-from app import login_manager
 from .group import memberships
 
 
-@login_manager.user_loader
-def load_user(user_id):
-    return User.query.get(int(user_id))
-
-
-class User(UserMixin, db.Model):
+class User(db.Model):
     __tablename__ = 'users'
     id = db.Column(db.Integer, primary_key=True)
     first_name = db.Column(db.String(20), nullable=False)
@@ -22,7 +16,8 @@ class User(UserMixin, db.Model):
     email = db.Column(db.String(50), unique=True, nullable=False)
     password_hash = db.Column(db.String(128))
     avatar = db.Column(db.String(20), default='default_avatar.jpg', nullable=False)
-    role_id = db.Column(db.Integer, db.ForeignKey('roles.id'))
+    role_id = db.Column(db.Integer, db.ForeignKey('roles.id'), default=2)
+    my_role = db.relationship('Role')
     created_groups = db.relationship('Group', backref='creator')
     memberships = db.relationship('Group', secondary=memberships, lazy='subquery', backref=db.backref('users', lazy=True))
     confirmed = db.Column(db.Boolean, default=False)
@@ -78,7 +73,7 @@ class User(UserMixin, db.Model):
 
 
     def __repr__(self):
-        return f"User('{self.first_name}', '{self.last_name}', '{self.avatar}')"
+        return f"User('{self.first_name}', '{self.last_name}','{self.email}', '{self.avatar}')"
 
 
 class UserSchema(ma.Schema):
@@ -86,13 +81,13 @@ class UserSchema(ma.Schema):
         model = 'User'
         include_relationships = True
         load_instance = True
-        exclude = ('email',)
 
     id = fields.Integer(dump_only=True)
     first_name = fields.String(required=True)
     last_name = fields.String(required=True)
     email = fields.Email(required=True)
     password = fields.String(required=True, load_only=True)
-    confirmed = fields.Boolean()
+    role = fields.Nested('RoleSchema', only=('name',), dump_only=True)
+    confirmed = fields.Boolean(dump_only=True)
     created_at = fields.DateTime(dump_only=True)
     updated_at = fields.DateTime(dump_only=True)

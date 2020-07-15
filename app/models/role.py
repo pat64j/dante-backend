@@ -1,5 +1,6 @@
 from app import db, ma
 from datetime import datetime
+from marshmallow import fields
 
 class Role(db.Model):
     __tablename__ = 'roles'
@@ -19,3 +20,9 @@ class RoleSchema(ma.Schema):
         model = 'Role'
         include_relationships = True
         load_instance = True
+
+    id = fields.Integer(dump_only=True)
+    name = fields.String(required=True)
+    users = fields.List(fields.Nested('User', only=('first_name','last_name','email','confirmed')), dump_only=True)
+    created_at = fields.DateTime(dump_only=True)
+    updated_at = fields.DateTime(dump_only=True)
