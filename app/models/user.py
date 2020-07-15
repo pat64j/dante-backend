@@ -1,4 +1,5 @@
-from app import db
+from app import db, ma
+from marshmallow import fields
 from datetime import datetime
 from flask_login import UserMixin
 from flask import current_app
@@ -22,7 +23,7 @@ class User(UserMixin, db.Model):
     password_hash = db.Column(db.String(128))
     avatar = db.Column(db.String(20), default='default_avatar.jpg', nullable=False)
     role_id = db.Column(db.Integer, db.ForeignKey('roles.id'))
-    groups = db.relationship('Group', backref='creator')
+    created_groups = db.relationship('Group', backref='creator')
     memberships = db.relationship('Group', secondary=memberships, lazy='subquery', backref=db.backref('users', lazy=True))
     confirmed = db.Column(db.Boolean, default=False)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
@@ -80,3 +81,18 @@ class User(UserMixin, db.Model):
         return f"User('{self.first_name}', '{self.last_name}', '{self.avatar}')"
 
 
+class UserSchema(ma.Schema):
+    class Meta:
+        model = 'User'
+        include_relationships = True
+        load_instance = True
+        exclude = ('email',)
+
+    id = fields.Integer(dump_only=True)
+    first_name = fields.String(required=True)
+    last_name = fields.String(required=True)
+    email = fields.Email(required=True)
+    password = fields.String(required=True, load_only=True)
+    confirmed = fields.Boolean()
+    created_at = fields.DateTime(dump_only=True)
+    updated_at = fields.DateTime(dump_only=True)

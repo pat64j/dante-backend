@@ -1,4 +1,4 @@
-from app import db
+from app import db, ma
 from datetime import datetime
 
 class Role(db.Model):
@@ -12,3 +12,10 @@ class Role(db.Model):
 
     def __repr__(self):
         return f"Role('{self.name}', '{self.created_at}')"
+
+
+class RoleSchema(ma.Schema):
+    class Meta:
+        model = 'Role'
+        include_relationships = True
+        load_instance = True
