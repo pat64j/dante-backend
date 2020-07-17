@@ -23,6 +23,4 @@ class BaseTestCase(unittest.TestCase):
     def tearDown(self):
         close_all_sessions()
         db.drop_all()
-        self.app_context().pop()
-
 
