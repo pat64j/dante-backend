@@ -1,5 +1,5 @@
 from datetime import datetime
-from app import db, ma
+from core import db, ma
 from marshmallow import fields
 
 

@@ -1,6 +1,6 @@
 from flask_seeder import Seeder
-from app.models.user import User
-from app.models.group import Group
+from core.models.user import User
+from core.models.group import Group
 
 class GroupSeeder(Seeder):
     def __init__(self, db=None):

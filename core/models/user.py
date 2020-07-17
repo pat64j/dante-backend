@@ -1,4 +1,4 @@
-from app import db, ma
+from core import db, ma
 from marshmallow import fields
 from datetime import datetime
 from flask import current_app
@@ -91,3 +91,13 @@ class UserSchema(ma.Schema):
     confirmed = fields.Boolean(dump_only=True)
     created_at = fields.DateTime(dump_only=True)
     updated_at = fields.DateTime(dump_only=True)
+
+
+class LoginSchema(ma.Schema):
+
+    class Meta:
+        model = 'User'
+
+    id = fields.Integer(dump_only=True)
+    email = fields.Email(required=True)
+    password = fields.String(required=True)

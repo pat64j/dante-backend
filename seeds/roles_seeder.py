@@ -1,5 +1,5 @@
 from flask_seeder import Seeder
-from app.models.role import Role
+from core.models.role import Role
 
 class RoleSeeder(Seeder):
     def __init__(self, db=None):

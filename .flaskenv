@@ -1,0 +1,2 @@
+FLASK_APP=dante.py
+FLASK_ENV=development

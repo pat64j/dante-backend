@@ -1,4 +1,4 @@
-from app import db, ma
+from core import db, ma
 from datetime import datetime
 from marshmallow import fields
 

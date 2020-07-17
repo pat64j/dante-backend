@@ -1,0 +1,2 @@
+graft core/templates
+global-exclude *.pyc

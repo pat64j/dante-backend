@@ -1,6 +1,6 @@
 from flask_seeder import Seeder, Faker, generator
-from app.models.role import Role
-from app.models.user import User
+from core.models.role import Role
+from core.models.user import User
 
 class UserSeeder(Seeder):
     def __init__(self, db=None):
