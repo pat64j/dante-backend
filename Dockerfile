@@ -15,5 +15,5 @@ COPY --from=builder /root/.local /root/.local
 COPY --from=builder /app /app
 WORKDIR /app
 ENV PATH=/root/.local/bin:$PATH
-ENTRYPOINT main:app --reload --host 0.0.0.0 --port 1234
+ENTRYPOINT ["python"]
 CMD ["app/dante.py"]
