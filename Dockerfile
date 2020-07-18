@@ -16,4 +16,4 @@ COPY --from=builder /app /app
 WORKDIR /app
 ENV PATH=/root/.local/bin:$PATH
 ENTRYPOINT ["python"]
-CMD ["app/dante.py"]
+CMD ["dante.py"]
