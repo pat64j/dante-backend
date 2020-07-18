@@ -4,6 +4,6 @@ from flask_restful import Resource
 
 class HomeApi(Resource):
     def get(self):
-        ret = {"message":"Home route success", "data": "This is an endpoint to test this api"}
+        ret = {"message":"API test success", "data": "This is an endpoint to test this api"}
         return ret, 200
 
