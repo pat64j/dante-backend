@@ -11,4 +11,4 @@ script:
 # unit test
 - python -m unittest -v
 after_success:
-- sh .travis/deploy_dockerhub.sh
+- sh .travis/deploy__dockerhub.sh
