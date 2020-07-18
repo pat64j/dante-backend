@@ -1,14 +1,14 @@
 sudo: required
-services
-- docker
+services:
+    - docker
 language: python
 python:
-- "3.8.0"
+    - "3.8.0"
 install:
-- pip install -r requirements.txt
+    - pip install -r requirements.txt
 # command to run tests
 script:
 # unit test
-- python -m unittest -v
+    - python -m unittest -v
 after_success:
-- sh .travis/deploy__dockerhub.sh
+    - sh .travis/deploy__dockerhub.sh
