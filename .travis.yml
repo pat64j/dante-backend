@@ -7,5 +7,3 @@ install:
 script:
 # unit test
 - python -m unittest -v
-# linting test
-- pylint
