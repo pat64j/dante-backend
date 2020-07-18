@@ -8,4 +8,4 @@ script:
 # unit test
 - python -m unittest -v
 # linting test
-- flake
+- pylint
