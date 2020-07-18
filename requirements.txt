@@ -5,7 +5,6 @@ attrs==19.3.0
 bcrypt==3.1.7
 cffi==1.14.0
 click==7.1.2
--e git+https://github.com/pat64j/dante-backend.git@9669f4962ea7de0cfe2cc97153a15d807e00e8ee#egg=dante
 Flask==1.1.2
 Flask-Bcrypt==0.7.1
 Flask-JWT-Extended==3.24.1
