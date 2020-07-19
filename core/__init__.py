@@ -40,4 +40,6 @@ def create_app(config_class=Config):
     app.register_blueprint(dante_api)
     app.register_blueprint(api_bp)
 
+    
+
     return app

@@ -15,18 +15,15 @@ class Group(db.Model):
     group_name = db.Column(db.String(60), nullable=False)
     group_description = db.Column(db.String(200))
     members = db.relationship('User', secondary=memberships, lazy='subquery', backref=db.backref('groups', lazy=True))
-    creator_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
+    creator_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False, default=1)
     owner = db.relationship('User')
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     updated_at = db.Column(db.DateTime, default=datetime.utcnow)
 
-    def __init__(self, group_name, group_description, creator_id, creator, created_at, updated_at):
+    def __init__(self, group_name, group_description, creator):
         self.group_name = group_name
         self.group_description = group_description
-        self.creator_id = creator_id
         self.creator = creator
-        self.created_at = created_at
-        self.updated_at = updated_at
 
 
 class GroupSchema(ma.Schema):
