@@ -10,13 +10,12 @@ install:
 script:
 # unit test
     - python -m unittest -v
-after_success:
-    deploy:
-        provider: heroku
-        api_key: $HEROKU_API_KEY
-        app: dante-bk-hub
-        on:
-        repo: pat64j/dante-backend
+deploy:
+    provider: heroku
+    api_key: $HEROKU_API_KEY
+    app: dante-bk-hub
+    on:
+    repo: pat64j/dante-backend
 # after_success:
 #     - sh .travis/deploy__dockerhub.sh
 #     – test “$TRAVIS_BRANCH” = “master” && sh .travis/deploy__heroku.sh
