@@ -53,7 +53,7 @@ class LoginApi(Resource):
 
         db_user = User.query.filter_by(email=str(json_data.get('email'))).first()
 
-        if db_user:
+        if db_user is not None:
             authorized = db_user.verify_password(json_data.get('password'))
             if not authorized:
                 return {"error":"Email or password invalid", "data": ""}, 401
@@ -63,8 +63,10 @@ class LoginApi(Resource):
             refresh_token = create_refresh_token(identity=db_user.id)
 
             return {"message":"Login successful", "data":{"token": access_token, "refresh_token": refresh_token}}, 200
+        elif db_user is None:
+            return {"error":"There is no account with this email", "data": ""}, 404
 
-        return {"error":"Email or password invalid", "data": ""}, 401
+        return {"error":"Server error", "data": ""}, 500
 
 
 class RefreshTokenApi(Resource):
