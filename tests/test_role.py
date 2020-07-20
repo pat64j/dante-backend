@@ -16,7 +16,7 @@ class TestRole(BaseTestCase):
     #     create_role()
 
     def test_home_endpoint(self):
-        rv = self.app.get('/api/v1/home')
+        rv = self.app.get('/api/v1/')
         self.assertEqual(rv.status_code, 200)
 
 
