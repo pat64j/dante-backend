@@ -27,6 +27,7 @@ def create_app(config_class=Config):
     from core.models.user import User
     from core.models.role import Role
     from core.models.group import Group
+    from core.models.token_blacklist import TokenBlacklist
 
     db.init_app(app)
     ma.init_app(app)

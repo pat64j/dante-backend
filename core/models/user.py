@@ -3,7 +3,7 @@ from marshmallow import fields
 from datetime import datetime
 from flask import current_app
 from flask_bcrypt import generate_password_hash, check_password_hash
-# from werkzeug.security import generate_password_hash, check_password_hash
+from werkzeug.security import generate_password_hash, check_password_hash
 from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
 from .group import memberships
 
