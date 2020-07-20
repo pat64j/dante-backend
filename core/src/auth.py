@@ -9,6 +9,7 @@ from flask_jwt_extended import (
     jwt_required,
     get_raw_jwt
 )
+from flask_jwt_extended.exceptions import WrongTokenError
 from core import db
 from flask_restful import Resource
 from core.models.user import User, UserSchema, LoginSchema
@@ -92,6 +93,8 @@ class AuthTokenApi(Resource):
             new_token = create_access_token(identity=current_user, fresh=False)
             add_token_to_database(new_token, current_user)
             return {"message": "Token refreshed successfully", "data":{"access_token": new_token}}, 200
+        except WrongTokenError:
+            return {"error": "Only refresh tokens are allowed", "data":""} , 401
         except Exception:
             return {"error": "An error occurred", "data":""} , 500
 
