@@ -1,6 +1,6 @@
 from flask import Blueprint
 from core.src.utils.blacklist_helpers import is_token_revoked
-from core import jwt, db
+from core import jwt
 from core.models.user import User
 
 @jwt.token_in_blacklist_loader

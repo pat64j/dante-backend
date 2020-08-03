@@ -1,8 +1,5 @@
 from flask_restful import HTTPException
 
-class ValidationError(ValueError):
-    pass
-
 class TokenNotFound(HTTPException):
     """ Indicates that a token could not be found in the DB """
     pass

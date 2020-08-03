@@ -1,10 +1,9 @@
 from datetime import datetime
 from sqlalchemy.orm.exc import NoResultFound
 from flask_jwt_extended import decode_token
-
-from core.src.exceptions import TokenNotFound
-from core.models.token_blacklist import TokenBlacklist
+from core.exceptions import TokenNotFound
 from core import db
+from core.models.token_blacklist import TokenBlacklist
 
 def _epoch_utc_to_datetime(epoch_utc):
     """

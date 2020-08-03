@@ -17,8 +17,8 @@ class Group(db.Model):
     members = db.relationship('User', secondary=memberships, lazy='subquery', backref=db.backref('groups', lazy=True))
     creator_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False, default=1)
     owner = db.relationship('User')
-    created_at = db.Column(db.DateTime, default=datetime.utcnow)
-    updated_at = db.Column(db.DateTime, default=datetime.utcnow)
+    created_at = db.Column(db.DateTime, server_default=db.func.now())
+    updated_at = db.Column(db.DateTime, server_default=db.func.now(), server_onupdate=db.func.now())
 
     def __init__(self, group_name, group_description, creator):
         self.group_name = group_name

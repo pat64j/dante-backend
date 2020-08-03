@@ -1,9 +1,8 @@
 from core import db, ma
-from marshmallow import fields
-from datetime import datetime
+from marshmallow import fields, EXCLUDE
+from datetime import datetime, date
 from flask import current_app
 from flask_bcrypt import generate_password_hash, check_password_hash
-from werkzeug.security import generate_password_hash, check_password_hash
 from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
 from .group import memberships
 
@@ -15,14 +14,15 @@ class User(db.Model):
     last_name = db.Column(db.String(20), nullable=False)
     email = db.Column(db.String(50), unique=True, nullable=False)
     password_hash = db.Column(db.String(128))
-    avatar = db.Column(db.String(20), default='default_avatar.jpg', nullable=False)
+    avatar = db.Column(db.String(50))
+    bday = db.Column(db.Date, default=date(1988,10,30))
     role_id = db.Column(db.Integer, db.ForeignKey('roles.id'), default=2)
     my_role = db.relationship('Role')
     created_groups = db.relationship('Group', backref='creator')
     memberships = db.relationship('Group', secondary=memberships, lazy='subquery', backref=db.backref('users', lazy=True))
     confirmed = db.Column(db.Boolean, default=False)
-    created_at = db.Column(db.DateTime, default=datetime.utcnow)
-    updated_at = db.Column(db.DateTime, default=datetime.utcnow)
+    created_at = db.Column(db.DateTime, server_default=db.func.now())
+    updated_at = db.Column(db.DateTime, server_default=db.func.now(), server_onupdate=db.func.now())
 
     @property
     def password(self):
@@ -31,7 +31,7 @@ class User(db.Model):
 
     @password.setter
     def password(self, password):
-        self.password_hash = generate_password_hash(password)
+        self.password_hash = generate_password_hash(password).decode('utf8')
 
 
     def verify_password(self, password):
@@ -73,7 +73,7 @@ class User(db.Model):
 
 
     def __repr__(self):
-        return f"User('{self.first_name}', '{self.last_name}','{self.email}', '{self.avatar}')"
+        return f"User('{self.first_name}', '{self.last_name}','{self.email}', '{self.bday}', '{self.avatar}')"
 
 
 class UserSchema(ma.Schema):
@@ -86,7 +86,9 @@ class UserSchema(ma.Schema):
     first_name = fields.String(required=True)
     last_name = fields.String(required=True)
     email = fields.Email(required=True)
-    password = fields.String(required=True, load_only=True)
+    password = fields.String(load_only=True)
+    bday = fields.Date()
+    avatar = fields.String(dump_only=True)
     role = fields.Nested('RoleSchema', only=('name',), dump_only=True)
     confirmed = fields.Boolean(dump_only=True)
     created_at = fields.DateTime(dump_only=True)

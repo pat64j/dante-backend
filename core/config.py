@@ -1,10 +1,12 @@
 import os
 from datetime import timedelta
 class Config:
-    ACCESS_EXPIRES = timedelta(minutes=15)
+    ACCESS_EXPIRES = timedelta(minutes=60)
     REFRESH_EXPIRES = timedelta(days=30)
 
     SECRET_KEY = os.getenv('SECRET_KEY')
+    UPLOAD_FOLDER = os.getenv('UPLOAD_FOLDER')
+    ALLOWED_EXTENSIONS = {'txt', 'pdf', 'png', 'jpg', 'jpeg'}
     SQLALCHEMY_DATABASE_URI = os.getenv('DATABASE_URL')
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     JWT_ACCESS_TOKEN_EXPIRES = ACCESS_EXPIRES

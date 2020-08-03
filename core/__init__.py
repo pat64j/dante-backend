@@ -7,6 +7,8 @@ from flask_marshmallow import Marshmallow
 from flask_migrate import Migrate
 from core.config import Config
 from flask_seeder import FlaskSeeder
+from flask_cors import CORS
+from core.exceptions import errors
 
 
 db = SQLAlchemy()
@@ -14,9 +16,10 @@ ma = Marshmallow()
 bcrypt = Bcrypt()
 migrate = Migrate()
 jwt = JWTManager()
+cors = CORS()
 seeder = FlaskSeeder()
 api_bp = Blueprint('api', __name__)
-api = Api(api_bp, prefix='/api/v1')
+api = Api(api_bp, prefix='/api/v1', errors=errors)
 
 
 
@@ -24,15 +27,12 @@ def create_app(config_class=Config):
     app = Flask(__name__)
     app.config.from_object(Config)
 
-    from core.models.user import User
-    from core.models.role import Role
-    from core.models.group import Group
-    from core.models.token_blacklist import TokenBlacklist
 
     db.init_app(app)
     ma.init_app(app)
     bcrypt.init_app(app)
     jwt.init_app(app)
+    cors.init_app(app, resources={r"/api/v1/*": {"origins": "*"}})
     migrate.init_app(app,db)
     seeder.init_app(app,db)
 
