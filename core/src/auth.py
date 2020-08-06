@@ -1,9 +1,7 @@
-import os
 import secrets
 import json
 from datetime import datetime, date
-from flask import request, Response, jsonify, url_for
-from flask import current_app as app
+from flask import request, jsonify
 from flask_jwt_extended import (
     create_access_token,
     get_jwt_identity,
@@ -33,8 +31,8 @@ from .utils.app_helpers import allowed_file, save_picture
 
 class SignupApi(Resource):
     def post(self):
-        user_schema = UserSchema()
-        json_data = request.get_json()
+        user_schema = UserSchema(unknown=EXCLUDE)
+        json_data = request.form['data']
 
         if not json_data:
             return {"error": "No input data provided."}, 400
@@ -58,23 +56,23 @@ class SignupApi(Resource):
 
 class LoginApi(Resource):
     def post(self):
-        login_schema = LoginSchema()
-        user_schema = UserSchema()
-        json_data = request.get_json()
+        login_schema = LoginSchema(unknown=EXCLUDE)
+        user_schema = UserSchema(unknown=EXCLUDE)
+        json_data = request.form['data']
 
         if not json_data:
             return {"error": "Email and password field not provided."}, 400
 
         try:
-            login_user = login_schema.load(json_data)
+            login_user = login_schema.load(json.loads(json_data))
         except ValidationError:
             raise SchemaValidationError
 
         db_user = User.query.filter_by(
-            email=str(json_data.get('email'))).first()
+            email=str(login_user.get('email'))).first()
 
         if db_user is not None:
-            authorized = db_user.verify_password(json_data.get('password'))
+            authorized = db_user.verify_password(login_user.get('password'))
             if not authorized:
                 return {"error": "Email or password invalid", "data": ""}, 401
 
@@ -165,13 +163,13 @@ class UserApi(Resource):
                 db_user.first_name = validated_user_json.get('first_name')
                 db_user.last_name = validated_user_json.get('last_name')
                 db_user.bday = validated_user_json.get('bday') or date(1988, 10, 30)
-                if file_path is not None:
+                if 'file_path' in locals() and file_path is not None:
                     db_user.avatar = file_path
                 db.session.commit()
                 result = user_schema.dump(db_user)
                 return {"message": "Account updated successfully", "data": result}, 200
         except NoResultFound:
-            db.session.rollback
+            db.session.rollback()
             raise AccountNotFoundError
         except Exception:
             raise UpdatingAccountError

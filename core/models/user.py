@@ -4,7 +4,7 @@ from datetime import datetime, date
 from flask import current_app
 from flask_bcrypt import generate_password_hash, check_password_hash
 from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
-from .group import memberships
+# from .group import memberships
 
 
 class User(db.Model):
@@ -19,7 +19,7 @@ class User(db.Model):
     role_id = db.Column(db.Integer, db.ForeignKey('roles.id'), default=2)
     my_role = db.relationship('Role')
     created_groups = db.relationship('Group', backref='creator')
-    memberships = db.relationship('Group', secondary=memberships, lazy='subquery', backref=db.backref('users', lazy=True))
+    # memberships = db.relationship('Group', secondary=memberships, lazy='subquery', backref=db.backref('users', lazy=True))
     confirmed = db.Column(db.Boolean, default=False)
     created_at = db.Column(db.DateTime, server_default=db.func.now())
     updated_at = db.Column(db.DateTime, server_default=db.func.now(), server_onupdate=db.func.now())

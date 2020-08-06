@@ -24,6 +24,7 @@ def add_token_to_database(encoded_token, identity_claim):
     user_identity = identity_claim
     expires = _epoch_utc_to_datetime(decoded_token['exp'])
     revoked = False
+    created_at = datetime.now()
 
     db_token = TokenBlacklist(
         jti=jti,
@@ -31,6 +32,7 @@ def add_token_to_database(encoded_token, identity_claim):
         user_identity=user_identity,
         expires=expires,
         revoked=revoked,
+        created_at=created_at,
     )
 
     db.session.add(db_token)

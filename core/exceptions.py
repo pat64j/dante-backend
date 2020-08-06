@@ -40,6 +40,10 @@ class UnauthorizedError(HTTPException):
     pass
 
 
+class NoInputReceivedError(HTTPException):
+    pass
+
+
 errors = {
     "InternalServerError": {
         "message": "Something went wrong",
@@ -72,5 +76,9 @@ errors = {
     "UnauthorizedError": {
         "message": "Invalid username or password",
         "status": 401
+    },
+    "NoInputReceivedError": {
+        "message": "No input data provided",
+        "status": 400
     }
 }

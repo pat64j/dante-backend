@@ -5,6 +5,7 @@ from core import db
 from core.models.user import User
 from core.models.role import Role
 from core.models.group import Group
+from core.src.utils.blacklist_helpers import prune_database
 
 
 
@@ -21,3 +22,11 @@ def drop_tables():
     """Drop my db tables."""
     db.drop_all()
     print('***** Datebase Tables Dropped ****')
+
+@click.command(name="prune_tokens")
+@with_appcontext
+def prune_tokens():
+    """Prune token tables."""
+    print('Pruning tokens table...')
+    prune_database()
+    print('***** Token Table Pruned ****')

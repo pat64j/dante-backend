@@ -26,6 +26,9 @@ from core.models.user import User
 from core.models.role import Role
 from core.models.group import Group
 from core.models.token_blacklist import TokenBlacklist
+from core.models.category import Category
+from core.models.message_type import MessageType
+from core.models.message import Message
 
 from flask import current_app
 config.set_main_option(
