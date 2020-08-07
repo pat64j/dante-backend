@@ -109,7 +109,7 @@ class AuthTokenApi(Resource):
 
             new_token = create_access_token(identity=current_user, fresh=False)
             add_token_to_database(new_token, current_user)
-            return {"message": "Token refreshed successfully", "data": {"access_token": new_token}}, 200
+            return {"message": "Token refreshed successfully", "data": {"access_token": new_token}}, 201
         except WrongTokenError:
             raise FreshTokenRequiredError
         except Exception:

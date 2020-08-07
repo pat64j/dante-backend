@@ -8,7 +8,7 @@ def allowed_file(filename):
            filename.rsplit('.', 1)[1].lower() in app.config['ALLOWED_EXTENSIONS']
 
 
-def prepare_picture(form_oicture):
+def prepare_picture(form_picture):
     filename = secure_filename(form_picture.filename)
     random_hex = secrets.token_hex(8)
     _, f_ext = os.path.splitext(filename)

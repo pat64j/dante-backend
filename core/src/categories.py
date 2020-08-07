@@ -1,9 +1,10 @@
-from flask import request
+from flask import request, json, jsonify
 from core.models.category import Category, CategorySchema
 from core import db
 from flask_restful import Resource
 from flask_jwt_extended import jwt_required
-from marshmallow import ValidationError
+from marshmallow import ValidationError, EXCLUDE
+from .utils.app_helpers import save_category_picture, allowed_file
 from core.exceptions import (NoInputReceivedError,
                              InternalServerError, SchemaValidationError)
 
@@ -14,7 +15,7 @@ class CategoriesApi(Resource):
         categories_schema = CategorySchema(many=True)
         try:
             db_categories = Category.query.all()
-            dump_categories = categories_schema.dumps(db_categories)
+            dump_categories = categories_schema.dump(db_categories)
             return {"message": "Categories loaded successfully", "data": dump_categories}, 200
         except Exception:
             raise InternalServerError
@@ -23,14 +24,14 @@ class CategoriesApi(Resource):
 class CategoryApi(Resource):
     @jwt_required
     def post(self):
-        category_schema = CategorySchema()
+        category_schema = CategorySchema(unknown=EXCLUDE)
         json_data = request.form['data']
 
         if not json_data:
             raise NoInputReceivedError
 
         try:
-            new_category = category_schema.load(json_data)
+            new_category = category_schema.load(json.loads(json_data))
         except ValidationError:
             raise SchemaValidationError
 
@@ -45,6 +46,8 @@ class CategoryApi(Resource):
                 db_category.c_thumbnail = file_path
             db.session.add(db_category)
             db.session.commit()
+            result = category_schema.dump(db_category)
+            return {"message": "Category created successfully", "data": result}, 201
         except Exception:
             db.session.rollback()
             raise InternalServerError

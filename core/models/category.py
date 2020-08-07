@@ -13,6 +13,10 @@ class Category(db.Model):
     updated_at = db.Column(db.DateTime, server_default=db.func.now(), server_onupdate=db.func.now())
 
 
+    def __repr__(self):
+        return f"Category('{self.c_name}', '{self.c_descripton}','{self.c_thumbnail}', '{self.created_at}', '{self.updated_at}')"
+
+
 
 
 class CategorySchema(ma.Schema):
