@@ -20,7 +20,8 @@ from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm.exc import NoResultFound
 from core.exceptions import (TokenNotFound,
                              SchemaValidationError, EmailAlreadyExistsError, FreshTokenRequiredError,
-                             InternalServerError, AccountNotFoundError, UpdatingAccountError
+                             InternalServerError, AccountNotFoundError, UpdatingAccountError,
+                             NoInputReceivedError
                              )
 from .utils.blacklist_helpers import (
     is_token_revoked, add_token_to_database, get_user_tokens,
@@ -144,7 +145,7 @@ class UserApi(Resource):
         user_id = get_jwt_identity()
 
         if not json_data:
-            return {"error": "No input data"}, 400
+            raise NoInputReceivedError
 
         try:
             validated_user_json = user_schema.load(json.loads(json_data))

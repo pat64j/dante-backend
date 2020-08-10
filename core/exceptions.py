@@ -44,6 +44,10 @@ class NoInputReceivedError(HTTPException):
     pass
 
 
+class ResourceNotFoundError(HTTPException):
+    pass
+
+
 errors = {
     "InternalServerError": {
         "message": "Something went wrong",
@@ -80,5 +84,9 @@ errors = {
     "NoInputReceivedError": {
         "message": "No input data provided",
         "status": 400
+    },
+    "ResourceNotFoundError": {
+        "message": "The resource requested could not be found.",
+        "status": 404
     }
 }
