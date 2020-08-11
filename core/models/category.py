@@ -1,6 +1,6 @@
 from datetime import datetime
 from core import db, ma
-from marshmallow import fields
+from marshmallow import fields, EXCLUDE
 
 
 class Category(db.Model):
@@ -14,7 +14,7 @@ class Category(db.Model):
 
 
     def __repr__(self):
-        return f"Category('{self.c_name}', '{self.c_descripton}','{self.c_thumbnail}', '{self.created_at}', '{self.avatar}')"
+        return f"Category({self.id}, '{self.c_name}', '{self.c_description}','{self.c_thumbnail}', {self.created_at}, {self.updated_at} '{self.c_thumbnail}')"
 
 
 
@@ -24,10 +24,11 @@ class CategorySchema(ma.Schema):
         model = 'Category'
         include_relationships = True
         load_instance = True
+        unknown = EXCLUDE
 
     id = fields.Integer(dump_only=True)
     c_name = fields.String(required=True)
-    c_description = fields.String()
-    c_thumbnail = fields.String()
+    c_description = fields.String(allow_none=True)
+    c_thumbnail = fields.String(allow_none=True)
     created_at = fields.DateTime(dump_only=True)
     updated_at = fields.DateTime(dump_only=True)

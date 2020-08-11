@@ -1,6 +1,6 @@
 from datetime import datetime
 from core import db, ma
-from marshmallow import fields
+from marshmallow import fields, EXCLUDE
 
 
 class MessageType(db.Model):
@@ -17,6 +17,7 @@ class MessageTypeSchema(ma.Schema):
         model = 'MessageType'
         include_relationships = True
         load_instance = True
+        unknown = EXCLUDE
 
     id = fields.Integer(dump_only=True)
     t_name = fields.String(required=True)

@@ -31,3 +31,17 @@ def save_category_picture(form_picture):
     f_url = url_for('static',filename="category_thumbs/"+picture_fn)
 
     return f_url
+
+def save_video_picture(form_picture):
+    picture_fn = prepare_picture(form_picture)
+    form_picture.save(os.path.join(app.root_path, app.config['VIDEO_MSG_THUMBS'], picture_fn))
+    f_url = url_for('static',filename="video_thumbs/"+picture_fn)
+
+    return f_url
+
+def save_audio_picture(form_picture):
+    picture_fn = prepare_picture(form_picture)
+    form_picture.save(os.path.join(app.root_path, app.config['AUDIO_MSG_THUMBS'], picture_fn))
+    f_url = url_for('static',filename="audio_thumbs/"+picture_fn)
+
+    return f_url

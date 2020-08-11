@@ -1,3 +1,4 @@
+from datetime import date
 from flask_seeder import Seeder, Faker, generator
 from core.models.role import Role
 from core.models.user import User
@@ -11,7 +12,7 @@ class UserSeeder(Seeder):
 
         role1 = Role.query.filter_by(name="admin").first()
         admin_user =  User(first_name="Patrick",\
-            last_name = "Adonteng", email = "pat64j@gmail.com", password="Password", confirmed=True, role= role1)
+            last_name = "Adonteng", email = "pat64j@gmail.com", password="Password", confirmed=True, bday=date(1988,10,30), role= role1)
 
         self.db.session.add(admin_user)
         self.db.session.commit()

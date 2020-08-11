@@ -7,6 +7,8 @@ class Config:
     SECRET_KEY = os.getenv('SECRET_KEY')
     UPLOAD_FOLDER = os.getenv('UPLOAD_FOLDER')
     CAT_UPLOAD_FOLDER = os.getenv('CAT_UPLOAD_FOLDER')
+    VIDEO_MSG_THUMBS = os.getenv('VIDEO_MSG_THUMBS')
+    AUDIO_MSG_THUMBS = os.getenv('AUDIO_MSG_THUMBS')
     ALLOWED_EXTENSIONS = {'txt', 'pdf', 'png', 'jpg', 'jpeg'}
     SQLALCHEMY_DATABASE_URI = os.getenv('DATABASE_URL')
     SQLALCHEMY_TRACK_MODIFICATIONS = False
