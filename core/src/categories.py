@@ -13,22 +13,6 @@ from core.exceptions import (NoInputReceivedError, ResourceNotFoundError,
 
 class CategoriesApi(Resource):
     @jwt_required
-    def get(self):
-        categories_schema = CategorySchema(many=True)
-        pagination_schema = PaginationSchema()
-        page = request.args.get('page',1, type=int)
-
-        try:
-            db_categories = Category.query.order_by(Category.updated_at.desc()).paginate(page=page, per_page=20)
-            dump_categories = categories_schema.dump(db_categories.items)
-            pagination = pagination_schema.dump(db_categories)
-            return {"message": "Categories loaded successfully", "data": dump_categories, "pagination": pagination}, 200
-        except Exception:
-            raise InternalServerError
-
-
-class CategoryApi(Resource):
-    @jwt_required
     def post(self):
         category_schema = CategorySchema(unknown=EXCLUDE)
         json_data = request.form['data']
@@ -59,6 +43,23 @@ class CategoryApi(Resource):
             raise InternalServerError
 
 
+
+    @jwt_required
+    def get(self):
+        categories_schema = CategorySchema(many=True)
+        pagination_schema = PaginationSchema()
+        page = request.args.get('page',1, type=int)
+
+        try:
+            db_categories = Category.query.order_by(Category.updated_at.desc()).paginate(page=page, per_page=20)
+            dump_categories = categories_schema.dump(db_categories.items)
+            pagination = pagination_schema.dump(db_categories)
+            return {"message": "Categories loaded successfully", "data": dump_categories, "pagination": pagination}, 200
+        except Exception:
+            raise InternalServerError
+
+
+class CategoryApi(Resource):
     @jwt_required
     def put(self, category_id):
         category_schema = CategorySchema(unknown=EXCLUDE)

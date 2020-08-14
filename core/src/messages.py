@@ -41,18 +41,6 @@ class MessageTypesApi(Resource):
 
 class MessagesApi(Resource):
     @jwt_required
-    def get(self):
-        message_schema = MessageSchema(many=True)
-        message_type = request.args.get('is_video')
-        all_messages = Message.query.filter_by(is_video=message_type).all()
-
-        result = message_schema.dump(all_messages)
-        return {"message": "Messages loaded successfully", "data": result}, 200
-
-
-
-class MessageApi(Resource):
-    @jwt_required
     def post(self):
         message_schema = MessageSchema()
         ms_type_schema = MessageTypeSchema()
@@ -106,4 +94,19 @@ class MessageApi(Resource):
             db.session.rollback()
             dir(Exception)
             return {"data":"ERROR ERROR ERROR ERROR"}, 500
+
+
+    @jwt_required
+    def get(self):
+        message_schema = MessageSchema(many=True)
+        message_type = request.args.get('is_video')
+        all_messages = Message.query.filter_by(is_video=message_type).all()
+
+        result = message_schema.dump(all_messages)
+        return {"message": "Messages loaded successfully", "data": result}, 200
+
+
+
+class MessageApi(Resource):
+    pass
 
