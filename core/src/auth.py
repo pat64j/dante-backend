@@ -157,20 +157,30 @@ class UserApi(Resource):
 
             if file and allowed_file(file.filename):
                 file_path = save_picture(file)
+        db_user = User.query.filter_by(email=user_id).first()
+        if db_user is not None:
+            db_user.first_name = validated_user_json.get('first_name')
+            db_user.last_name = validated_user_json.get('last_name')
+            db_user.bday = validated_user_json.get('bday') or date(1988, 10, 30)
+            if 'file_path' in locals() and file_path is not None:
+                db_user.avatar = file_path
+            db.session.commit()
+            result = user_schema.dump(db_user)
+            return {"message": "Account updated successfully", "data": result}, 200
 
-        try:
-            db_user = User.query.filter_by(email=user_id).first()
-            if db_user is not None:
-                db_user.first_name = validated_user_json.get('first_name')
-                db_user.last_name = validated_user_json.get('last_name')
-                db_user.bday = validated_user_json.get('bday') or date(1988, 10, 30)
-                if 'file_path' in locals() and file_path is not None:
-                    db_user.avatar = file_path
-                db.session.commit()
-                result = user_schema.dump(db_user)
-                return {"message": "Account updated successfully", "data": result}, 200
-        except NoResultFound:
-            db.session.rollback()
-            raise AccountNotFoundError
-        except Exception:
-            raise UpdatingAccountError
+        # try:
+        #     db_user = User.query.filter_by(email=user_id).first()
+        #     if db_user is not None:
+        #         db_user.first_name = validated_user_json.get('first_name')
+        #         db_user.last_name = validated_user_json.get('last_name')
+        #         db_user.bday = validated_user_json.get('bday') or date(1988, 10, 30)
+        #         if 'file_path' in locals() and file_path is not None:
+        #             db_user.avatar = file_path
+        #         db.session.commit()
+        #         result = user_schema.dump(db_user)
+        #         return {"message": "Account updated successfully", "data": result}, 200
+        # except NoResultFound:
+        #     db.session.rollback()
+        #     raise AccountNotFoundError
+        # except Exception:
+        #     raise UpdatingAccountError
