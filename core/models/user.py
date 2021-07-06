@@ -14,7 +14,7 @@ class User(db.Model):
     last_name = db.Column(db.String(20), nullable=False)
     email = db.Column(db.String(50), unique=True, nullable=False)
     password_hash = db.Column(db.String(128))
-    avatar = db.Column(db.String(50))
+    avatar = db.Column(db.String(200))
     bday = db.Column(db.Date, default=date(1988,10,30))
     role_id = db.Column(db.Integer, db.ForeignKey('roles.id'), default=2)
     my_role = db.relationship('Role')

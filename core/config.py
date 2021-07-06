@@ -3,7 +3,7 @@ from datetime import timedelta
 class Config:
     ACCESS_EXPIRES = timedelta(minutes=60)
     REFRESH_EXPIRES = timedelta(days=30)
-
+    START_NGROK = os.getenv('START_NGROK') is not None and os.getenv('WERKZEUG_RUN_MAIN') != 'true'
     SECRET_KEY = os.getenv('SECRET_KEY')
     UPLOAD_FOLDER = os.getenv('UPLOAD_FOLDER')
     CAT_UPLOAD_FOLDER = os.getenv('CAT_UPLOAD_FOLDER')

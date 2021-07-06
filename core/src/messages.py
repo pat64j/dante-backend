@@ -6,9 +6,11 @@ from flask_jwt_extended import jwt_required
 from core.models.message_type import MessageType, MessageTypeSchema
 from core.models.category import Category, CategorySchema
 from core.models.message import Message, MessageSchema
+from sqlalchemy.orm.exc import NoResultFound
+from sqlalchemy.exc import IntegrityError
 from core.exceptions import (InternalServerError, NoInputReceivedError,
-SchemaValidationError)
-from marshmallow import ValidationError
+SchemaValidationError, ResourceNotFoundError)
+from marshmallow import ValidationError, EXCLUDE
 from .utils.app_helpers import save_video_picture, save_audio_picture, allowed_file
 
 
@@ -108,5 +110,53 @@ class MessagesApi(Resource):
 
 
 class MessageApi(Resource):
-    pass
+    @jwt_required
+    def put(self, message_id):
+        message_schema = MessageSchema(unknown=EXCLUDE)
+        json_data = json.loads(request.form['data'])
+
+        if not json_data:
+            return NoInputReceivedError
+
+        try:
+            val_message = message_schema.load(json_data)
+        except ValidationError:
+            raise SchemaValidationError
+
+        if 'file' in request.files:
+            file = request.files['file']
+
+            if file and allowed_file(file.filename):
+                file_path = save_video_picture(file)
+
+        try:
+            db_msg = Message.query.get(message_id)
+            media_type_id = int(json_data.get('m_type')['id'])
+            category_ids = [int(val['id']) for val in json_data.get('m_categories')]
+
+            media_type_obj = MessageType.query.get(media_type_id)
+            category_objs = db.session.query(Category).filter(Category.id.in_(category_ids)).all()
+
+            db_msg.m_title=json_data.get('m_title')
+            db_msg.m_description=json_data.get('m_description')
+            db_msg.m_link=json_data.get('m_link')
+            db_msg.is_video=json_data.get('is_video')
+            db_msg.m_duration=json_data.get('m_duration')
+            db_msg.m_broadcast=json_data.get('m_broadcast')
+
+            if 'file_path' in locals() and file_path is not None:
+                db_msg.m_thumbnail = file_path
+
+            db_msg.m_type = media_type_obj
+            db_msg.m_categories = [category for category in category_objs]
+
+            db.session.commit()
+            result = message_schema.dump(db_msg)
+            return {"message": "Message updated successfully", "data": result}, 200
+        except NoResultFound:
+            raise ResourceNotFoundError
+        except (IntegrityError, Exception):
+            raise InternalServerError
+
+
 
